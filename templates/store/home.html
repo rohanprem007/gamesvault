@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    /* Hero Banner Container */
+    .hero-wrapper {
+        position: relative;
+        height: 550px; /* Slightly shorter for better fit */
+        width: 100%;
+        overflow: hidden;
+        border-bottom: 2px solid var(--primary);
+        background-color: #000;
+    }
+
+    /* Layer 1: Blurred Background */
+    .hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        filter: blur(15px) brightness(0.4) saturate(1.2); /* Sassy blur effect */
+        transform: scale(1.1); /* Prevent blur edges showing */
+        transition: transform 10s ease;
+        z-index: 0;
+    }
+    
+    .hero-wrapper:hover .hero-bg {
+        transform: scale(1.15);
+    }
+
+    /* Layer 2: Text Content (Left Side) */
+    .hero-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 60%; /* Takes up left 60% */
+        padding: 80px 60px;
+        background: linear-gradient(90deg, var(--bg-dark) 0%, rgba(15, 5, 24, 0.8) 60%, transparent 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        z-index: 2;
+    }
+
+    /* Layer 3: Sharp Foreground Image (Right Side) */
+    .hero-fg-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 50%; /* Takes up right 50% */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        padding-right: 40px;
+    }
+
+    .hero-fg-img {
+        max-height: 85%;
+        max-width: 90%;
+        box-shadow: -10px 10px 30px rgba(0,0,0,0.6), 0 0 20px var(--primary-glow);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 8px;
+        transform: perspective(1000px) rotateY(-15deg) rotateX(5deg); /* 3D Tilt */
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .hero-wrapper:hover .hero-fg-img {
+        transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.05);
+        box-shadow: 0 0 40px var(--secondary);
+    }
+
+    .badge-featured {
+        background: var(--gradient-main);
+        color: white;
+        padding: 6px 16px;
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+        display: inline-block;
+        margin-bottom: 20px;
+        box-shadow: 0 0 15px var(--primary-glow);
+        width: fit-content;
+    }
+
+    /* About Project Strip */
+    .project-strip {
+        background-color: var(--bg-panel);
+        padding: 40px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        margin-bottom: 60px;
+        position: relative;
+    }
+    
+    .project-strip::before {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 20%;
+        width: 60%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+    }
+
+    .info-card {
+        padding: 20px;
+        border-left: 2px solid transparent;
+        transition: 0.3s;
+    }
+    
+    .info-card:hover {
+        border-left-color: var(--secondary);
+        background: linear-gradient(90deg, rgba(255,255,255,0.03), transparent);
+    }
+
+    .info-card i {
+        font-size: 28px;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+    }
+
+    /* Game Cards */
+    .game-card-link {
+        text-decoration: none;
+        display: block;
+        height: 100%;
+    }
+
+    .game-card {
+        background-color: var(--bg-panel);
+        border-radius: 0;
+        overflow: hidden;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        border: 1px solid rgba(255,255,255,0.05);
+        position: relative;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+    }
+
+    .game-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        border-color: var(--primary);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 15px var(--primary-glow);
+        z-index: 10;
+    }
+
+    .card-img-container {
+        position: relative;
+        padding-top: 140%; /* Changed to Portrait Aspect Ratio for Box Art */
+        overflow: hidden;
+    }
+
+    .card-img-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.5s;
+    }
+
+    .game-card:hover .card-img-container img {
+        transform: scale(1.1);
+        filter: saturate(1.2);
+    }
+
+    .discount-badge {
+        background: var(--primary);
+        color: white;
+        font-weight: 800;
+        padding: 3px 8px;
+        font-size: 13px;
+        transform: skewX(-10deg);
+        display: inline-block;
+    }
+
+    .add-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 0;
+        background: rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        border: none;
+        transition: 0.2s;
+        clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 20%);
+    }
+
+    .add-btn:hover {
+        background: var(--secondary);
+        color: #000;
+        transform: scale(1.1);
+    }
+</style>
+
+<!-- HERO SECTION (CAROUSEL) -->
+{% if featured_games %}
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <!-- Carousel Indicators -->
+    <div class="carousel-indicators">
+        {% for game in featured_games %}
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+        {% endfor %}
+    </div>
+
+    <!-- Carousel Items -->
+    <div class="carousel-inner">
+        {% for game in featured_games %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="5000">
+            <!-- Wrapped in Google Search Link -->
+            <a href="https://www.google.com/search?q={{ game.title|urlencode }}+video+game" target="_blank" class="text-decoration-none">
+                <div class="hero-wrapper">
+                    <!-- Layer 1: Blurred Background -->
+                    <div class="hero-bg" style="background-image: url('{% if game.image %}{{ game.image.url }}{% else %}https://via.placeholder.com/1920x1080/1a0b2e/ff0055?text=Background{% endif %}');"></div>
+                    
+                    <!-- Layer 2: Sharp Foreground Image (Right) -->
+                    <div class="hero-fg-container">
+                        <img src="{% if game.image %}{{ game.image.url }}{% else %}https://via.placeholder.com/600x800/1a0b2e/ff0055?text=Box+Art{% endif %}" alt="{{ game.title }}" class="hero-fg-img">
+                    </div>
+
+                    <!-- Layer 3: Text Content (Left) -->
+                    <div class="hero-content">
+                        <span class="badge-featured">Featured Highlight</span>
+                        <h1 class="display-3 fw-bold text-white mb-2" style="text-shadow: 0 4px 10px rgba(0,0,0,0.8);">{{ game.title }}</h1>
+                        <p class="text-muted fs-5 mb-4" style="max-width: 600px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                            {{ game.description|truncatewords:25 }}
+                        </p>
+                        <div class="d-flex align-items-center gap-4">
+                            <span class="fs-4 fw-bold text-white" style="text-shadow: 0 0 10px var(--primary-glow);">${{ game.final_price }}</span>
+                            <button class="btn-theme">PURCHASE NOW</button>
+                            <button class="btn btn-outline-light rounded-0 px-4 py-2" style="border-width: 2px; font-weight: 600;">WISHLIST</button>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" style="z-index: 5;">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" style="z-index: 5;">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+{% else %}
+    <!-- Fallback if no game is featured -->
+    <div class="hero-wrapper">
+        <div class="hero-bg" style="background-color: var(--bg-panel);"></div>
+        <div class="hero-content" style="width: 100%; text-align: center; align-items: center; background: none;">
+            <h1 class="display-3 fw-bold text-white">Welcome to GameVault</h1>
+            <p class="text-muted">Access the admin panel to add your first featured game.</p>
+            <a href="/admin" class="btn-theme">GO TO ADMIN</a>
+        </div>
+    </div>
+{% endif %}
+
+<!-- PROJECT EXPLANATION STRIP -->
+<div class="project-strip">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <h3 class="text-white mb-2 brand-font" style="color: var(--secondary) !important;">The Vault Experience</h3>
+                <p class="text-muted mb-0 small">
+                    GameVault is an open-source project demonstrating a scalable, secure digital distribution system powered by Python & Django.
+                </p>
+            </div>
+            <div class="col-lg-8">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <i class="fas fa-shield-alt"></i>
+                            <h6 class="text-white">Secure CRM</h6>
+                            <p class="text-muted small mb-0">Integrated support ticket system to manage user requests efficiently.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-card">
+                            <i class="fas fa-bolt"></i>
+                            <h6 class="text-white">Instant Delivery</h6>
+                            <p class="text-muted small mb-0">Optimized backend ensures immediate access to your digital library.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-card" style="border-right: 1px solid rgba(255,255,255,0.1);">
+                            <i class="fas fa-users"></i>
+                            <h6 class="text-white">Community First</h6>
+                            <p class="text-muted small mb-0">Built for gamers, by gamers. Join the revolution.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- GAME GRID -->
+<div class="container pb-5">
+    <div class="d-flex justify-content-between align-items-end mb-4 border-bottom border-secondary border-opacity-25 pb-3">
+        <h3 class="text-white mb-0 brand-font">Trending Now</h3>
+        <a href="#" class="text-muted text-decoration-none small hover-white" style="letter-spacing: 1px;">VIEW ALL <i class="fas fa-chevron-right ms-1 text-primary"></i></a>
+    </div>
+
+    <div class="row g-4">
+        {% for game in games %}
+        <div class="col-6 col-md-3">
+            <!-- WRAPPED IN GOOGLE SEARCH LINK -->
+            <a href="https://www.google.com/search?q={{ game.title|urlencode }}+video+game" target="_blank" class="game-card-link">
+                <div class="game-card">
+                    <div class="card-img-container">
+                        <img src="{% if game.image %}{{ game.image.url }}{% else %}https://via.placeholder.com/400x600/2d1245/ff0055?text=Game{% endif %}" alt="{{ game.title }}">
+                    </div>
+                    <div class="p-3 d-flex flex-column h-100">
+                        <div class="mb-2">
+                            <span class="text-muted small text-uppercase fw-bold" style="font-size: 10px; color: var(--secondary) !important;">{{ game.get_genre_display }}</span>
+                        </div>
+                        <h5 class="text-white mb-3 text-truncate brand-font" style="font-size: 18px;">{{ game.title }}</h5>
+                        
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                {% if game.discount_price %}
+                                    <span class="discount-badge me-2">-SALE</span>
+                                    <div class="d-flex flex-column" style="line-height: 1;">
+                                        <span class="text-muted text-decoration-line-through" style="font-size: 10px;">${{ game.price }}</span>
+                                        <span class="text-white fw-bold" style="font-size: 15px;">${{ game.discount_price }}</span>
+                                    </div>
+                                {% else %}
+                                    <span class="text-white fw-bold" style="font-size: 15px;">${{ game.price }}</span>
+                                {% endif %}
+                            </div>
+                            <button class="add-btn"><i class="fas fa-search small"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">No games in the library yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
