@@ -1,16 +1,40 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
 from .models import Game, Library, Wishlist
 
 def home(request):
-    featured_games = Game.objects.filter(is_featured=True)[:5]
-    all_games = Game.objects.all()
+    # Only pick the top 10 Featured games for the carousel and "Trending" section
+    featured_games = Game.objects.filter(is_featured=True)[:10]
+    
+    # We pass 'featured_games' twice because your home template uses it for both 
+    # the carousel AND the grid. If you want the grid to show different games,
+    # you can adjust this query.
     context = {
         'featured_games': featured_games,
-        'games': all_games,
+        'games': featured_games, # For now, the home page grid also shows these trending ones
     }
     return render(request, 'store/home.html', context)
+
+def browse_games(request):
+    query = request.GET.get('q')
+    genre_filter = request.GET.get('genre')
+    
+    games = Game.objects.all().order_by('-release_date')
+    
+    if query:
+        games = games.filter(Q(title__icontains=query) | Q(description__icontains=query))
+    
+    if genre_filter:
+        games = games.filter(genre=genre_filter)
+        
+    context = {
+        'games': games,
+        'query': query,
+        'genre_filter': genre_filter
+    }
+    return render(request, 'store/browse.html', context)
 
 def game_detail(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
@@ -54,7 +78,6 @@ def buy_game(request, game_id):
         
     return redirect('library')
 
-# New Views for Community and Support
 def community(request):
     return render(request, 'community.html')
 

@@ -19,6 +19,18 @@ class Game(models.Model):
     release_date = models.DateField()
     is_featured = models.BooleanField(default=False)
 
+    # --- System Requirements (Minimum) ---
+    min_os = models.CharField(max_length=200, default="Windows 10 64-bit")
+    min_cpu = models.CharField(max_length=200, default="Intel Core i5-4460 or AMD Ryzen 3 1200")
+    min_ram = models.CharField(max_length=200, default="8 GB RAM")
+    min_gpu = models.CharField(max_length=200, default="NVIDIA GeForce GTX 960 or AMD Radeon RX 470")
+
+    # --- System Requirements (Recommended) ---
+    rec_os = models.CharField(max_length=200, default="Windows 10/11 64-bit")
+    rec_cpu = models.CharField(max_length=200, default="Intel Core i7-8700 or AMD Ryzen 5 3600")
+    rec_ram = models.CharField(max_length=200, default="16 GB RAM")
+    rec_gpu = models.CharField(max_length=200, default="NVIDIA GeForce RTX 2060 or AMD Radeon RX 5700 XT")
+
     def __str__(self):
         return self.title
 
@@ -32,7 +44,7 @@ class Library(models.Model):
     purchase_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'game') # Prevent duplicate purchases
+        unique_together = ('user', 'game')
 
     def __str__(self):
         return f"{self.user.username} owns {self.game.title}"

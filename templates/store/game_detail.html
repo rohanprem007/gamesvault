@@ -79,19 +79,19 @@
                     <div class="col-6">
                         <h6 class="text-white">MINIMUM:</h6>
                         <ul class="list-unstyled small">
-                            <li>OS: Windows 10 64-bit</li>
-                            <li>Processor: Intel Core i5-8400</li>
-                            <li>Memory: 16 GB RAM</li>
-                            <li>Graphics: NVIDIA GeForce GTX 1060 6GB</li>
+                            <li class="mb-2"><strong class="text-secondary">OS:</strong> {{ game.min_os }}</li>
+                            <li class="mb-2"><strong class="text-secondary">Processor:</strong> {{ game.min_cpu }}</li>
+                            <li class="mb-2"><strong class="text-secondary">Memory:</strong> {{ game.min_ram }}</li>
+                            <li class="mb-2"><strong class="text-secondary">Graphics:</strong> {{ game.min_gpu }}</li>
                         </ul>
                     </div>
                     <div class="col-6">
                         <h6 class="text-white">RECOMMENDED:</h6>
                         <ul class="list-unstyled small">
-                            <li>OS: Windows 11 64-bit</li>
-                            <li>Processor: Intel Core i9-12900k</li>
-                            <li>Memory: 32 GB RAM</li>
-                            <li>Graphics: NVIDIA GeForce RTX 3080</li>
+                            <li class="mb-2"><strong class="text-secondary">OS:</strong> {{ game.rec_os }}</li>
+                            <li class="mb-2"><strong class="text-secondary">Processor:</strong> {{ game.rec_cpu }}</li>
+                            <li class="mb-2"><strong class="text-secondary">Memory:</strong> {{ game.rec_ram }}</li>
+                            <li class="mb-2"><strong class="text-secondary">Graphics:</strong> {{ game.rec_gpu }}</li>
                         </ul>
                     </div>
                 </div>
