@@ -98,6 +98,8 @@
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
             transition: all 0.2s;
             box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-theme:hover {
@@ -105,6 +107,21 @@
             box-shadow: 6px 6px 0px var(--primary);
             color: white;
             filter: brightness(1.1);
+        }
+        
+        .btn-login-link {
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        
+        .btn-login-link:hover {
+            color: var(--secondary);
+            text-shadow: 0 0 8px var(--secondary);
         }
 
         /* --- Footer --- */
@@ -145,6 +162,14 @@
             transform: rotate(15deg) scale(1.1);
             box-shadow: 0 0 15px var(--primary-glow);
         }
+        
+        /* Message Alerts */
+        .alert {
+            background: var(--bg-panel);
+            border: 1px solid var(--secondary);
+            color: white;
+            border-radius: 0;
+        }
     </style>
 </head>
 <body>
@@ -165,13 +190,28 @@
                 <li class="nav-item"><a class="nav-link" href="#">Support</a></li>
             </ul>
             
-            <div class="d-flex align-items-center gap-3">
-                <a href="#" class="text-white hover-glow"><i class="fas fa-search"></i></a>
-                <a href="/admin" class="btn-theme brand-font">SIGN IN</a>
+            <div class="d-flex align-items-center">
+                {% if user.is_authenticated %}
+                    <span class="text-white me-3 brand-font">HI, {{ user.username }}</span>
+                    <a href="{% url 'logout' %}" class="btn-login-link" style="font-size: 12px; color: var(--text-muted);">LOGOUT</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-login-link brand-font">LOGIN</a>
+                    <a href="{% url 'register' %}" class="btn-theme brand-font">SIGN UP</a>
+                {% endif %}
             </div>
         </div>
     </div>
 </nav>
+
+<div class="container mt-3">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
 
 <div style="min-height: 80vh;">
     {% block content %}

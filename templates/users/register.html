@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="p-5" style="background-color: var(--bg-panel); border: 1px solid var(--primary); max-width: 500px; width: 100%; position: relative; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);">
+        <h2 class="text-white brand-font mb-4 text-center">Join the <span style="color: var(--primary);">Vault</span></h2>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <!-- Loop through form fields to style them manually -->
+            {% for field in form %}
+            <div class="mb-3">
+                <label class="form-label text-muted small text-uppercase fw-bold">{{ field.label }}</label>
+                <div class="">
+                    <!-- Add custom styles to the input fields -->
+                    <input type="{{ field.field.widget.input_type }}" 
+                           name="{{ field.name }}" 
+                           id="{{ field.id_for_label }}" 
+                           class="form-control rounded-0" 
+                           style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white;"
+                           {% if field.value %}value="{{ field.value }}"{% endif %}>
+                </div>
+                {% if field.errors %}
+                    <div class="text-danger small mt-1">{{ field.errors.0 }}</div>
+                {% endif %}
+                {% if field.help_text %}
+                    <div class="text-muted small mt-1" style="font-size: 10px;">{{ field.help_text|safe }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn-theme w-100 mt-3">Sign Up</button>
+        </form>
+        
+        <div class="mt-4 text-center">
+            <small class="text-muted">Already have an account? <a href="{% url 'login' %}" class="text-white fw-bold text-decoration-none">Log In</a></small>
+        </div>
+    </div>
+</div>
+{% endblock content %}

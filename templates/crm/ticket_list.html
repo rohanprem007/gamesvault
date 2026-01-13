@@ -1,0 +1,51 @@
+{% extends "dashboard_base.html" %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-white brand-font">SUPPORT TICKETS</h2>
+    <a href="{% url 'create_ticket' %}" class="btn-theme">NEW TICKET</a>
+</div>
+
+<div class="card rounded-0 border-0" style="background: var(--bg-panel);">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0" style="--bs-table-bg: transparent;">
+                <thead>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <th class="p-3 text-muted text-uppercase small">ID</th>
+                        <th class="p-3 text-muted text-uppercase small">Subject</th>
+                        <th class="p-3 text-muted text-uppercase small">Status</th>
+                        <th class="p-3 text-muted text-uppercase small">Priority</th>
+                        <th class="p-3 text-muted text-uppercase small">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td class="p-3">#{{ ticket.id }}</td>
+                        <td class="p-3 fw-bold text-white">{{ ticket.subject }}</td>
+                        <td class="p-3">
+                            <span class="badge {% if ticket.status == 'resolved' %}bg-success{% elif ticket.status == 'open' %}bg-primary{% else %}bg-secondary{% endif %} rounded-0">
+                                {{ ticket.get_status_display }}
+                            </span>
+                        </td>
+                            <td class="p-3">
+                            <span class="badge {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %} rounded-0">
+                                {{ ticket.get_priority_display }}
+                            </span>
+                        </td>
+                        <td class="p-3 text-muted small">{{ ticket.created_at|date:"M d" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center p-5 text-muted">
+                            No support tickets found. Need help? Create one!
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

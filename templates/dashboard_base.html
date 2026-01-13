@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Dashboard specific styles */
+    .dashboard-container {
+        padding-top: 40px;
+        padding-bottom: 60px;
+    }
+    
+    .sidebar-panel {
+        background: var(--bg-panel);
+        border: 1px solid rgba(255,255,255,0.05);
+        height: 100%;
+    }
+
+    .action-btn {
+        width: 100%;
+        padding: 15px 20px;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        text-align: left;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        border-left: 3px solid transparent;
+        font-weight: 500;
+        font-size: 15px;
+    }
+    
+    .action-btn:hover {
+        background: var(--bg-hover);
+        color: white;
+        padding-left: 25px;
+    }
+
+    .action-btn.active {
+        background: linear-gradient(90deg, var(--bg-hover) 0%, transparent 100%);
+        border-left-color: var(--secondary);
+        color: white;
+        text-shadow: 0 0 10px var(--secondary);
+    }
+
+    .action-btn i {
+        width: 30px;
+        text-align: center;
+        margin-right: 10px;
+    }
+
+    .user-badge {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--bg-panel) 100%);
+        padding: 30px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+</style>
+
+<div class="container dashboard-container">
+    <div class="row g-4">
+        <!-- SIDEBAR (Common Menu) -->
+        <div class="col-lg-3">
+            <div class="sidebar-panel">
+                <div class="user-badge">
+                    <h5 class="text-white brand-font mb-0 text-uppercase">{{ user.username }}</h5>
+                    <small class="text-white-50" style="font-size: 12px;">Member since {{ user.date_joined|date:"Y" }}</small>
+                </div>
+                
+                <div class="py-2">
+                    <a href="{% url 'profile' %}" class="action-btn {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="{% url 'library' %}" class="action-btn {% if request.resolver_match.url_name == 'library' %}active{% endif %}">
+                        <i class="fas fa-gamepad"></i> My Library
+                    </a>
+                    <a href="{% url 'ticket_list' %}" class="action-btn {% if 'ticket' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-ticket-alt"></i> Support Tickets
+                    </a>
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </div>
+
+                <div class="p-3 border-top border-secondary border-opacity-10 mt-4">
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger w-100 rounded-0 btn-sm" style="border-color: rgba(255,0,0,0.3); color: #ff6b6b;">
+                        <i class="fas fa-sign-out-alt me-2"></i> LOGOUT
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="col-lg-9">
+            {% block dashboard_content %}
+            <!-- Individual pages will inject content here -->
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

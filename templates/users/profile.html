@@ -1,0 +1,94 @@
+{% extends "dashboard_base.html" %}
+
+{% block dashboard_content %}
+<style>
+    .dashboard-header {
+        background: linear-gradient(90deg, var(--bg-panel) 0%, rgba(255, 0, 85, 0.1) 100%);
+        padding: 30px;
+        border-left: 4px solid var(--primary);
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background-color: var(--bg-panel);
+        padding: 25px;
+        height: 100%;
+        border: 1px solid rgba(255,255,255,0.05);
+        transition: 0.3s;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--secondary);
+    }
+    
+    .stat-number {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+
+<!-- Header -->
+<div class="dashboard-header">
+    <h2 class="text-white brand-font mb-1">Welcome back, <span style="color: var(--secondary);">{{ user.username }}</span></h2>
+    <p class="text-muted mb-0">Here's what's happening in your vault.</p>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h6 class="text-muted text-uppercase small fw-bold">Games Owned</h6>
+            <div class="stat-number">12</div>
+            <div class="small text-muted mt-2">Value: <span class="text-white">$450.00</span></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h6 class="text-muted text-uppercase small fw-bold">Achievements</h6>
+            <div class="stat-number">348</div>
+            <div class="small text-muted mt-2">Top 10% Player</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h6 class="text-muted text-uppercase small fw-bold">Support Tickets</h6>
+            <div class="stat-number">0</div>
+            <div class="small text-muted mt-2"><span class="text-success">All Resolved</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="p-4" style="background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.05);">
+    <h5 class="text-white brand-font mb-4">LATEST ACTIVITY</h5>
+    
+    <div class="d-flex align-items-center mb-3 pb-3 border-bottom border-secondary border-opacity-10">
+        <div style="width: 50px; height: 50px; background: var(--bg-hover); display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+            <i class="fas fa-trophy text-warning"></i>
+        </div>
+        <div>
+            <h6 class="text-white mb-0">Achievement Unlocked</h6>
+            <small class="text-muted">Elden Ring - "Shardbearer Godrick"</small>
+        </div>
+        <small class="text-muted ms-auto">2h ago</small>
+    </div>
+
+    <div class="d-flex align-items-center mb-3 pb-3 border-bottom border-secondary border-opacity-10">
+        <div style="width: 50px; height: 50px; background: var(--bg-hover); display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+            <i class="fas fa-shopping-cart text-primary"></i>
+        </div>
+        <div>
+            <h6 class="text-white mb-0">Purchase Successful</h6>
+            <small class="text-muted">Cyberpunk 2077 - Phantom Liberty Bundle</small>
+        </div>
+        <small class="text-muted ms-auto">1d ago</small>
+    </div>
+</div>
+
+{% endblock %}

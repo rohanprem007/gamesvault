@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="p-5" style="background-color: var(--bg-panel); border: 1px solid var(--secondary); max-width: 450px; width: 100%; position: relative; clip-path: polygon(20px 0, 100% 0, 100% 100%, 0 100%, 0 20px);">
+        <h2 class="text-white brand-font mb-4 text-center">Access <span style="color: var(--secondary);">Denied?</span></h2>
+        <p class="text-center text-muted mb-4">Just kidding. Enter your credentials.</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+                <label class="form-label text-muted small text-uppercase fw-bold">{{ field.label }}</label>
+                <input type="{{ field.field.widget.input_type }}" 
+                       name="{{ field.name }}" 
+                       class="form-control rounded-0" 
+                       style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white;">
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn-theme w-100 mt-3" style="background: var(--secondary); color: black; box-shadow: 4px 4px 0 rgba(255,255,255,0.2);">LOGIN</button>
+        </form>
+        
+        <div class="mt-4 text-center">
+            <small class="text-muted">Need an account? <a href="{% url 'register' %}" class="text-white fw-bold text-decoration-none">Sign Up</a></small>
+        </div>
+    </div>
+</div>
+{% endblock content %}
