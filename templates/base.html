@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GameVault</title>
     
-    <!-- Google Fonts: Poppins & Rajdhani -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Rajdhani:wght@600;700;900&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,48 +15,66 @@
     <style>
         :root {
             /* Sassy Vibrant Theme */
-            --bg-dark: #0f0518;       /* Deep Violet Black */
-            --bg-panel: #1a0b2e;      /* Purple Panel */
-            --bg-hover: #2d1245;      /* Lighter Purple */
+            --bg-dark: #0f0518;       
+            --bg-panel: #1a0b2e;      
+            --bg-hover: #2d1245;      
             
-            --primary: #ff0055;       /* Electric Pink */
+            --primary: #ff0055;       
             --primary-glow: rgba(255, 0, 85, 0.5);
-            --secondary: #00f2ea;     /* Cyber Cyan */
-            --accent: #ffae00;        /* Sunset Yellow */
+            --secondary: #ffd700; /* Gold */    
+            --accent: #00f2ea;        
             
             --text-main: #ffffff;
-            --text-muted: #d0c2e0;    /* Lilac Muted */
+            --text-muted: #e2e8f0; /* Soft Platinum */   
             
-            --gradient-main: linear-gradient(135deg, #ff0055 0%, #00f2ea 100%);
-            --gradient-logo: linear-gradient(90deg, #ff0055, #ffae00, #00f2ea);
+            --gradient-main: linear-gradient(135deg, #ff0055 0%, #ffd700 100%);
+            --gradient-logo: linear-gradient(90deg, #ff0055, #00f2ea, #ffd700);
         }
 
         body {
             background-color: var(--bg-dark);
+            background: radial-gradient(circle at 50% 0%, #1a0b2e 0%, #0f0518 80%);
             color: var(--text-main);
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
+            min-height: 100vh;
         }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--bg-hover); 
+            border-radius: 5px; 
+            border: 2px solid var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
         h1, h2, h3, h4, .brand-font {
             font-family: 'Rajdhani', sans-serif;
             text-transform: uppercase;
         }
 
+        /* Override Bootstrap's text-muted to use our visible color */
+        .text-muted {
+            color: #d1d5db !important; /* A very light gray/white for high visibility */
+            opacity: 1 !important; /* Ensure no transparency makes it dim */
+        }
+
         /* --- Navbar --- */
         .navbar {
-            background-color: rgba(15, 5, 24, 0.9);
+            background-color: rgba(15, 5, 24, 0.95);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(255, 0, 85, 0.2);
-            padding: 1rem 0;
+            padding: 0.8rem 0;
+            z-index: 1000;
         }
 
         .navbar-brand {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 900;
             font-style: italic;
             letter-spacing: -1px;
-            /* Gradient Text Logic */
             background: var(--gradient-logo);
             background-size: 200% auto;
             -webkit-background-clip: text;
@@ -64,17 +82,13 @@
             animation: shine 3s linear infinite;
         }
         
-        @keyframes shine {
-            to {
-                background-position: 200% center;
-            }
-        }
+        @keyframes shine { to { background-position: 200% center; } }
 
         .nav-link {
-            color: var(--text-muted) !important;
+            color: #ffffff !important; /* Force white for nav links */
             font-weight: 600;
-            font-size: 15px;
-            margin: 0 12px;
+            font-size: 14px;
+            margin: 0 10px;
             transition: 0.3s;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -82,49 +96,80 @@
 
         .nav-link:hover, .nav-link.active {
             color: var(--secondary) !important;
-            text-shadow: 0 0 8px rgba(0, 242, 234, 0.6);
-            transform: skewX(-10deg);
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
         }
 
         .btn-theme {
             background: var(--gradient-main);
-            color: white;
+            color: #000;
             font-weight: 800;
             border: none;
-            padding: 10px 28px;
-            border-radius: 0;
+            padding: 8px 24px;
             text-transform: uppercase;
             letter-spacing: 1px;
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
             transition: all 0.2s;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.5);
             text-decoration: none;
             display: inline-block;
+            font-size: 14px;
         }
 
         .btn-theme:hover {
             transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--primary);
-            color: white;
-            filter: brightness(1.1);
+            box-shadow: 5px 5px 0px var(--primary);
+            color: #000;
         }
         
-        .btn-login-link {
-            color: white;
-            font-weight: 700;
-            text-transform: uppercase;
-            text-decoration: none;
-            margin-right: 20px;
-            font-size: 14px;
+        /* Dropdown Menu Styles */
+        .user-dropdown .dropdown-menu {
+            background-color: var(--bg-panel);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 0;
+            padding: 0;
+            margin-top: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .user-dropdown .dropdown-item {
+            color: #ffffff !important; /* Force white for dropdown items */
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             transition: 0.2s;
+            font-size: 14px;
         }
         
-        .btn-login-link:hover {
-            color: var(--secondary);
-            text-shadow: 0 0 8px var(--secondary);
+        .user-dropdown .dropdown-item:hover {
+            background-color: var(--bg-hover);
+            color: var(--secondary) !important;
+            padding-left: 25px;
+        }
+        
+        .user-dropdown .dropdown-toggle::after {
+            display: none;
+        }
+        
+        .user-avatar-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+        
+        .user-avatar-btn:hover, .user-dropdown.show .user-avatar-btn {
+            background: var(--bg-hover);
+            border-color: var(--secondary);
+            color: white;
         }
 
-        /* --- Footer --- */
+        /* Footer */
         footer {
             background-color: var(--bg-panel);
             margin-top: 80px;
@@ -134,42 +179,34 @@
         }
         
         footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
             background: var(--gradient-logo);
         }
         
         .social-btn {
-            width: 44px;
-            height: 44px;
+            width: 40px; height: 40px;
             background: rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            transition: 0.3s;
-            text-decoration: none;
+            display: flex; align-items: center; justify-content: center;
+            color: white; transition: 0.3s; text-decoration: none;
             clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
         }
         
         .social-btn:hover {
-            background: var(--primary);
-            color: white;
-            transform: rotate(15deg) scale(1.1);
-            box-shadow: 0 0 15px var(--primary-glow);
+            background: var(--primary); transform: rotate(15deg) scale(1.1);
+            box-shadow: 0 0 15px var(--primary-glow); color: white;
         }
         
-        /* Message Alerts */
-        .alert {
-            background: var(--bg-panel);
-            border: 1px solid var(--secondary);
-            color: white;
-            border-radius: 0;
+        .alert { background: var(--bg-panel); border: 1px solid var(--secondary); color: white; border-radius: 0; }
+
+        /* Back to Top Button */
+        #btn-back-to-top {
+            position: fixed; bottom: 20px; right: 20px;
+            display: none; background: var(--secondary); color: #000;
+            border: none; width: 45px; height: 45px; z-index: 99;
+            clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+            transition: 0.3s;
         }
+        #btn-back-to-top:hover { transform: scale(1.1); box-shadow: 0 0 15px var(--secondary); }
     </style>
 </head>
 <body>
@@ -185,17 +222,34 @@
         <div class="collapse navbar-collapse" id="navContent">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item"><a class="nav-link active" href="/">Store</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Library</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Community</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Support</a></li>
             </ul>
             
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <a href="#" class="text-white hover-glow me-2"><i class="fas fa-search"></i></a>
+                
                 {% if user.is_authenticated %}
-                    <span class="text-white me-3 brand-font">HI, {{ user.username }}</span>
-                    <a href="{% url 'logout' %}" class="btn-login-link" style="font-size: 12px; color: var(--text-muted);">LOGOUT</a>
+                    <!-- LOGGED IN DROPDOWN -->
+                    <div class="dropdown user-dropdown">
+                        <div class="user-avatar-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div style="width: 30px; height: 30px; background: var(--gradient-main); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                            <span class="brand-font">{{ user.username }}</span>
+                            <i class="fas fa-chevron-down small text-muted"></i>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-th-large me-2 text-primary"></i> Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{% url 'library' %}"><i class="fas fa-gamepad me-2 text-secondary"></i> My Library</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ticket_list' %}"><i class="fas fa-ticket-alt me-2 text-warning"></i> Support</a></li>
+                            <li><hr class="dropdown-divider bg-secondary opacity-25 my-1"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </div>
                 {% else %}
-                    <a href="{% url 'login' %}" class="btn-login-link brand-font">LOGIN</a>
+                    <!-- GUEST BUTTONS -->
+                    <a href="{% url 'login' %}" class="text-white text-decoration-none fw-bold small me-3" style="letter-spacing: 1px;">LOGIN</a>
                     <a href="{% url 'register' %}" class="btn-theme brand-font">SIGN UP</a>
                 {% endif %}
             </div>
@@ -218,12 +272,17 @@
     {% endblock %}
 </div>
 
+<!-- Back to top button -->
+<button type="button" class="btn btn-floating btn-lg" id="btn-back-to-top">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
 <footer>
     <div class="container">
         <div class="row gy-4">
-            <div class="col-lg-5">
+            <div class="col-lg-4">
                 <h4 class="brand-font text-white mb-3" style="color: var(--secondary) !important;">GameVault</h4>
-                <p class="text-muted" style="max-width: 400px;">
+                <p class="text-muted" style="font-size: 1.1rem;">
                     The next-generation digital platform. Bold, Fast, and built for the players who want more.
                 </p>
                 <div class="d-flex gap-2 mt-4">
@@ -232,7 +291,7 @@
                     <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
-            <div class="col-6 col-lg-2">
+            <div class="col-lg-2 col-6">
                 <h6 class="text-white mb-3">Platform</h6>
                 <ul class="list-unstyled text-muted">
                     <li class="mb-2"><a href="#" class="text-reset text-decoration-none hover-pink">Browse</a></li>
@@ -240,13 +299,20 @@
                     <li class="mb-2"><a href="#" class="text-reset text-decoration-none hover-pink">Features</a></li>
                 </ul>
             </div>
-            <div class="col-6 col-lg-2">
+            <div class="col-lg-2 col-6">
                 <h6 class="text-white mb-3">Support</h6>
                 <ul class="list-unstyled text-muted">
                     <li class="mb-2"><a href="#" class="text-reset text-decoration-none hover-pink">Help Center</a></li>
                     <li class="mb-2"><a href="#" class="text-reset text-decoration-none hover-pink">Refunds</a></li>
-                    <li class="mb-2"><a href="#" class="text-reset text-decoration-none hover-pink">Status</a></li>
                 </ul>
+            </div>
+            <div class="col-lg-4">
+                <h6 class="text-white mb-3">Stay Updated</h6>
+                <p class="text-muted small">Subscribe to our newsletter for the latest drops and sales.</p>
+                <div class="input-group">
+                    <input type="email" class="form-control rounded-0 bg-dark border-secondary text-white" placeholder="Enter your email">
+                    <button class="btn btn-theme rounded-0" type="button">JOIN</button>
+                </div>
             </div>
         </div>
         <div class="text-center pt-4 mt-5 border-top border-secondary border-opacity-25">
@@ -256,5 +322,20 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Back to top logic
+    let mybutton = document.getElementById("btn-back-to-top");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    };
+    mybutton.addEventListener("click", function () {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    });
+</script>
 </body>
 </html>

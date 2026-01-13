@@ -2,9 +2,9 @@
 
 {% block content %}
 <style>
-    /* Dashboard specific styles */
-    .dashboard-container {
-        padding-top: 40px;
+    /* Dashboard specific layout */
+    .dashboard-wrapper {
+        padding-top: 30px;
         padding-bottom: 60px;
     }
     
@@ -12,6 +12,8 @@
         background: var(--bg-panel);
         border: 1px solid rgba(255,255,255,0.05);
         height: 100%;
+        position: sticky;
+        top: 100px; /* Sticks below the navbar */
     }
 
     .action-btn {
@@ -19,7 +21,7 @@
         padding: 15px 20px;
         background: transparent;
         border: none;
-        color: var(--text-muted);
+        color: #ffffff;
         text-align: left;
         transition: 0.2s;
         display: flex;
@@ -56,14 +58,14 @@
     }
 </style>
 
-<div class="container dashboard-container">
+<div class="container dashboard-wrapper">
     <div class="row g-4">
-        <!-- SIDEBAR (Common Menu) -->
-        <div class="col-lg-3">
+        <!-- SIDEBAR -->
+        <div class="col-lg-3 d-none d-lg-block">
             <div class="sidebar-panel">
                 <div class="user-badge">
                     <h5 class="text-white brand-font mb-0 text-uppercase">{{ user.username }}</h5>
-                    <small class="text-white-50" style="font-size: 12px;">Member since {{ user.date_joined|date:"Y" }}</small>
+                    <small class="text-white-50" style="font-size: 12px; color: #e0d0f0 !important;">Member since {{ user.date_joined|date:"Y" }}</small>
                 </div>
                 
                 <div class="py-2">
@@ -76,14 +78,8 @@
                     <a href="{% url 'ticket_list' %}" class="action-btn {% if 'ticket' in request.resolver_match.url_name %}active{% endif %}">
                         <i class="fas fa-ticket-alt"></i> Support Tickets
                     </a>
-                    <a href="#" class="action-btn">
-                        <i class="fas fa-cog"></i> Settings
-                    </a>
-                </div>
-
-                <div class="p-3 border-top border-secondary border-opacity-10 mt-4">
-                    <a href="{% url 'logout' %}" class="btn btn-outline-danger w-100 rounded-0 btn-sm" style="border-color: rgba(255,0,0,0.3); color: #ff6b6b;">
-                        <i class="fas fa-sign-out-alt me-2"></i> LOGOUT
+                    <a href="/" class="action-btn">
+                        <i class="fas fa-store"></i> Back to Store
                     </a>
                 </div>
             </div>
@@ -92,7 +88,6 @@
         <!-- MAIN CONTENT AREA -->
         <div class="col-lg-9">
             {% block dashboard_content %}
-            <!-- Individual pages will inject content here -->
             {% endblock %}
         </div>
     </div>
