@@ -19,17 +19,16 @@ class Game(models.Model):
     release_date = models.DateField()
     is_featured = models.BooleanField(default=False)
 
-    # --- System Requirements (Minimum) ---
+    # Specs
     min_os = models.CharField(max_length=200, default="Windows 10 64-bit")
-    min_cpu = models.CharField(max_length=200, default="Intel Core i5-4460 or AMD Ryzen 3 1200")
+    min_cpu = models.CharField(max_length=200, default="Intel Core i5-4460")
     min_ram = models.CharField(max_length=200, default="8 GB RAM")
-    min_gpu = models.CharField(max_length=200, default="NVIDIA GeForce GTX 960 or AMD Radeon RX 470")
+    min_gpu = models.CharField(max_length=200, default="NVIDIA GeForce GTX 960")
 
-    # --- System Requirements (Recommended) ---
     rec_os = models.CharField(max_length=200, default="Windows 10/11 64-bit")
-    rec_cpu = models.CharField(max_length=200, default="Intel Core i7-8700 or AMD Ryzen 5 3600")
+    rec_cpu = models.CharField(max_length=200, default="Intel Core i7-8700")
     rec_ram = models.CharField(max_length=200, default="16 GB RAM")
-    rec_gpu = models.CharField(max_length=200, default="NVIDIA GeForce RTX 2060 or AMD Radeon RX 5700 XT")
+    rec_gpu = models.CharField(max_length=200, default="NVIDIA GeForce RTX 2060")
 
     def __str__(self):
         return self.title
@@ -59,3 +58,25 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"{self.user.username} wishes for {self.game.title}"
+
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Cart for {self.user.username}"
+    
+    @property
+    def total_price(self):
+        return sum(item.game.final_price for item in self.items.all())
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('cart', 'game')
+
+    def __str__(self):
+        return f"{self.game.title} in cart"

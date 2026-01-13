@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h2 class="text-white brand-font mb-4">YOUR CART <span class="text-secondary">({{ cart.items.count }} items)</span></h2>
+            
+            {% if cart.items.count > 0 %}
+                <div class="card rounded-0 bg-transparent border-0">
+                    {% for item in cart.items.all %}
+                    <div class="card mb-3 rounded-0 bg-panel border-secondary" style="background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1);">
+                        <div class="row g-0 align-items-center">
+                            <div class="col-md-3">
+                                <img src="{{ item.game.image.url }}" class="img-fluid rounded-start h-100" style="object-fit: cover; min-height: 120px;" alt="{{ item.game.title }}">
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="badge bg-secondary mb-1 text-dark">{{ item.game.get_genre_display }}</span>
+                                        <h5 class="card-title text-white mb-1">{{ item.game.title }}</h5>
+                                        <small class="text-muted">Digital Key</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <h4 class="text-secondary fw-bold mb-2">${{ item.game.final_price }}</h4>
+                                        <a href="{% url 'remove_from_cart' item.game.id %}" class="text-white text-decoration-none small hover-pink"><i class="fas fa-trash me-1"></i> Remove</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5" style="background: var(--bg-panel); border: 1px dashed var(--secondary);">
+                    <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                    <h4 class="text-white">Your cart is empty.</h4>
+                    <a href="{% url 'browse_games' %}" class="btn btn-theme mt-3">BROWSE GAMES</a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card rounded-0 border-0" style="background: var(--bg-panel); position: sticky; top: 100px;">
+                <div class="card-body p-4">
+                    <h4 class="text-white brand-font mb-4">SUMMARY</h4>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Subtotal</span>
+                        <span class="text-white">${{ cart.total_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="text-muted">Taxes</span>
+                        <span class="text-white">Calculated at checkout</span>
+                    </div>
+                    <hr class="border-secondary">
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="text-white fw-bold">TOTAL</span>
+                        <span class="h3 text-secondary fw-bold mb-0">${{ cart.total_price }}</span>
+                    </div>
+                    
+                    {% if cart.items.count > 0 %}
+                        <a href="{% url 'checkout' %}" class="btn btn-theme w-100 py-3 fw-bold">CHECKOUT NOW</a>
+                    {% else %}
+                        <button class="btn btn-secondary w-100 py-3 fw-bold" disabled>CHECKOUT NOW</button>
+                    {% endif %}
+                    
+                    <div class="mt-3 text-center">
+                        <small class="text-muted"><i class="fas fa-lock me-1"></i> Secure Checkout</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

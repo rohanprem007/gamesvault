@@ -2,51 +2,46 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-from .models import Game, Library, Wishlist
+from .models import Game, Library, Wishlist, Cart, CartItem
 
 def home(request):
-    # Only fetch Top 10 Featured games for Home Page
     featured_games = Game.objects.filter(is_featured=True)[:10]
-    
+    # For the grid, we can show recent games or random ones
+    games = Game.objects.filter(is_featured=True)[:4] 
     context = {
         'featured_games': featured_games,
-        'games': featured_games, # For the grid on home page, usually just show trending too
+        'games': games, 
     }
     return render(request, 'store/home.html', context)
 
 def browse_games(request):
-    # Fetch ALL games for the browse page
     query = request.GET.get('q')
     genre_filter = request.GET.get('genre')
-    
     games = Game.objects.all().order_by('-release_date')
-    
     if query:
         games = games.filter(Q(title__icontains=query) | Q(description__icontains=query))
-    
     if genre_filter:
         games = games.filter(genre=genre_filter)
-        
-    context = {
-        'games': games,
-        'query': query,
-        'genre_filter': genre_filter
-    }
+    context = {'games': games, 'query': query, 'genre_filter': genre_filter}
     return render(request, 'store/browse.html', context)
 
 def game_detail(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     in_library = False
     in_wishlist = False
+    in_cart = False
     
     if request.user.is_authenticated:
         in_library = Library.objects.filter(user=request.user, game=game).exists()
         in_wishlist = Wishlist.objects.filter(user=request.user, game=game).exists()
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        in_cart = CartItem.objects.filter(cart=cart, game=game).exists()
         
     context = {
         'game': game,
         'in_library': in_library,
-        'in_wishlist': in_wishlist
+        'in_wishlist': in_wishlist,
+        'in_cart': in_cart
     }
     return render(request, 'store/game_detail.html', context)
 
@@ -54,26 +49,75 @@ def game_detail(request, game_id):
 def add_to_wishlist(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     Wishlist.objects.get_or_create(user=request.user, game=game)
-    messages.success(request, f"{game.title} added to your wishlist!")
+    messages.success(request, "Added to wishlist")
     return redirect('game_detail', game_id=game_id)
 
 @login_required
 def remove_from_wishlist(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     Wishlist.objects.filter(user=request.user, game=game).delete()
-    messages.info(request, f"{game.title} removed from wishlist.")
+    messages.info(request, "Removed from wishlist")
     return redirect('game_detail', game_id=game_id)
 
 @login_required
+def add_to_cart(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    if Library.objects.filter(user=request.user, game=game).exists():
+        messages.warning(request, "You already own this game!")
+        return redirect('game_detail', game_id=game_id)
+        
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    item, created = CartItem.objects.get_or_create(cart=cart, game=game)
+    if created:
+        messages.success(request, f"{game.title} added to cart")
+    else:
+        messages.info(request, "Already in cart")
+    return redirect('view_cart')
+
+@login_required
+def remove_from_cart(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    cart = get_object_or_404(Cart, user=request.user)
+    CartItem.objects.filter(cart=cart, game=game).delete()
+    messages.info(request, "Removed from cart")
+    return redirect('view_cart')
+
+@login_required
+def view_cart(request):
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    return render(request, 'store/cart.html', {'cart': cart})
+
+@login_required
+def checkout(request):
+    cart = get_object_or_404(Cart, user=request.user)
+    items = cart.items.all()
+    
+    if not items:
+        messages.warning(request, "Your cart is empty!")
+        return redirect('view_cart')
+        
+    for item in items:
+        # Check if already owned just in case
+        if not Library.objects.filter(user=request.user, game=item.game).exists():
+            Library.objects.create(user=request.user, game=item.game)
+            # Remove from wishlist if purchased
+            Wishlist.objects.filter(user=request.user, game=item.game).delete()
+            
+    # Clear cart
+    cart.items.all().delete()
+    messages.success(request, "Purchase successful! Games added to library.")
+    return redirect('library')
+
+@login_required
 def buy_game(request, game_id):
+    # Direct buy shortcut
     game = get_object_or_404(Game, pk=game_id)
     if Library.objects.filter(user=request.user, game=game).exists():
         messages.warning(request, "You already own this game!")
     else:
         Library.objects.create(user=request.user, game=game)
-        messages.success(request, f"Successfully purchased {game.title}! Added to Library.")
+        messages.success(request, f"Purchased {game.title}!")
         Wishlist.objects.filter(user=request.user, game=game).delete()
-        
     return redirect('library')
 
 def community(request):

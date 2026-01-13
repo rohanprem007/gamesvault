@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Game, Library, Wishlist
+from .models import Game, Library, Wishlist, Cart, CartItem
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
@@ -10,8 +10,16 @@ class GameAdmin(admin.ModelAdmin):
 @admin.register(Library)
 class LibraryAdmin(admin.ModelAdmin):
     list_display = ('user', 'game', 'purchase_date')
-    search_fields = ('user__username', 'game__title')
 
 @admin.register(Wishlist)
 class WishlistAdmin(admin.ModelAdmin):
     list_display = ('user', 'game', 'added_at')
+
+class CartItemInline(admin.TabularInline):
+    model = CartItem
+    extra = 0
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'created_at', 'total_price')
+    inlines = [CartItemInline]
