@@ -138,14 +138,14 @@
 <!-- GENRE BROWSING -->
 <div class="container mt-4">
     <div class="category-scroll">
-        <a href="#" class="genre-chip"><i class="fas fa-fire me-2"></i>Trending</a>
-        <a href="#" class="genre-chip"><i class="fas fa-fist-raised me-2"></i>Action</a>
-        <a href="#" class="genre-chip"><i class="fas fa-dungeon me-2"></i>RPG</a>
-        <a href="#" class="genre-chip"><i class="fas fa-chess me-2"></i>Strategy</a>
-        <a href="#" class="genre-chip"><i class="fas fa-users me-2"></i>Multiplayer</a>
-        <a href="#" class="genre-chip"><i class="fas fa-ghost me-2"></i>Horror</a>
-        <a href="#" class="genre-chip"><i class="fas fa-rocket me-2"></i>Sci-Fi</a>
-        <a href="#" class="genre-chip"><i class="fas fa-futbol me-2"></i>Sports</a>
+        <a href="#browse-all" class="genre-chip"><i class="fas fa-fire me-2"></i>Trending</a>
+        <a href="#browse-all" class="genre-chip"><i class="fas fa-fist-raised me-2"></i>Action</a>
+        <a href="#browse-all" class="genre-chip"><i class="fas fa-dungeon me-2"></i>RPG</a>
+        <a href="#browse-all" class="genre-chip"><i class="fas fa-chess me-2"></i>Strategy</a>
+        <a href="#browse-all" class="genre-chip"><i class="fas fa-users me-2"></i>Multiplayer</a>
+        <a href="#browse-all" class="genre-chip"><i class="fas fa-ghost me-2"></i>Horror</a>
+        <a href="#browse-all" class="genre-chip"><i class="fas fa-rocket me-2"></i>Sci-Fi</a>
+        <a href="#browse-all" class="genre-chip"><i class="fas fa-futbol me-2"></i>Sports</a>
     </div>
 </div>
 
@@ -167,7 +167,7 @@
 </div>
 
 <!-- GAME GRID -->
-<div class="container pb-5">
+<div class="container pb-5" id="browse-all">
     <div class="d-flex justify-content-between align-items-end mb-4 border-bottom border-secondary border-opacity-25 pb-3">
         <h3 class="text-white mb-0 brand-font">Trending Now</h3>
         <a href="#" class="text-white text-decoration-none small hover-white" style="letter-spacing: 1px;">VIEW ALL <i class="fas fa-chevron-right ms-1 text-primary"></i></a>
@@ -214,18 +214,31 @@
 </div>
 
 <script>
-    // Simple Flash Sale Countdown Logic
-    const timerDisplay = document.getElementById('sale-timer');
-    let time = 72000; // 20 hours in seconds
-    
-    setInterval(() => {
-        let hours = Math.floor(time / 3600);
-        let minutes = Math.floor((time % 3600) / 60);
-        let seconds = time % 60;
-        
-        timerDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        time = time > 0 ? time - 1 : 72000;
-    }, 1000);
+    // Robust Flash Sale Countdown
+    document.addEventListener("DOMContentLoaded", function() {
+        const timerDisplay = document.getElementById('sale-timer');
+        if (!timerDisplay) return;
+
+        // Set deadline to 24 hours from now
+        let countdownTime = 24 * 60 * 60; // seconds
+
+        const updateTimer = () => {
+            const hours = Math.floor(countdownTime / 3600);
+            const minutes = Math.floor((countdownTime % 3600) / 60);
+            const seconds = countdownTime % 60;
+
+            timerDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+            if (countdownTime > 0) {
+                countdownTime--;
+            } else {
+                countdownTime = 24 * 60 * 60; // Reset
+            }
+        };
+
+        setInterval(updateTimer, 1000);
+        updateTimer(); // Run immediately
+    });
 </script>
 
 {% endblock %}

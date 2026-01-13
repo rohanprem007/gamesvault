@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h6 class="text-secondary brand-font ls-2">HELP CENTER</h6>
+        <h1 class="display-4 text-white fw-bold mb-3">HOW CAN WE HELP?</h1>
+        <div class="mx-auto" style="max-width: 600px;">
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control bg-dark border-secondary text-white rounded-0" placeholder="Search for issues (e.g. 'refund', 'login')...">
+                <button class="btn btn-theme rounded-0"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="p-4 text-center h-100" style="background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;">
+                <i class="fas fa-user-shield fa-3x text-primary mb-3"></i>
+                <h4 class="text-white brand-font">ACCOUNT ISSUES</h4>
+                <p class="text-white small">Trouble logging in? Need to reset your password or update security settings?</p>
+                <a href="#" class="text-secondary fw-bold text-decoration-none">Learn More &rarr;</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 text-center h-100" style="background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;">
+                <i class="fas fa-credit-card fa-3x text-secondary mb-3"></i>
+                <h4 class="text-white brand-font">BILLING & PAYMENTS</h4>
+                <p class="text-white small">Questions about charges, payment methods, or purchase history?</p>
+                <a href="#" class="text-secondary fw-bold text-decoration-none">Learn More &rarr;</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 text-center h-100" style="background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;">
+                <i class="fas fa-gamepad fa-3x text-warning mb-3"></i>
+                <h4 class="text-white brand-font">GAME SUPPORT</h4>
+                <p class="text-white small">Experiencing crashes, bugs, or installation problems with a specific title?</p>
+                <a href="#" class="text-secondary fw-bold text-decoration-none">Learn More &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticket CTA -->
+    <div class="p-5 text-center" style="background: linear-gradient(45deg, var(--bg-hover), var(--bg-dark)); border-left: 5px solid var(--primary);">
+        <h3 class="text-white brand-font mb-3">STILL NEED HELP?</h3>
+        <p class="text-white mb-4">Our support team is available 24/7 to assist you with any inquiries.</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'ticket_list' %}" class="btn btn-theme btn-lg">OPEN A TICKET</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-theme btn-lg">LOGIN TO SUPPORT</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

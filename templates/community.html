@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-3 brand-font text-white fw-bold">COMMUNITY <span style="color: var(--secondary);">HUB</span></h1>
+        <p class="lead text-white" style="max-width: 600px; margin: 0 auto;">Join the conversation, share your highlights, and connect with fellow gamers in the Vault.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Feed -->
+        <div class="col-lg-8">
+            <div class="card bg-dark border-secondary mb-4 rounded-0 p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="https://via.placeholder.com/50" class="rounded-circle me-3" alt="User">
+                    <input type="text" class="form-control bg-transparent border-0 text-white" placeholder="Share something with the community..." style="font-size: 1.2rem;">
+                </div>
+                <div class="d-flex justify-content-end border-top border-secondary pt-2">
+                    <button class="btn btn-theme btn-sm">POST UPDATE</button>
+                </div>
+            </div>
+
+            <!-- Posts Placeholder -->
+            <div class="card mb-3 rounded-0" style="background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1);">
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <div style="width: 40px; height: 40px; background: var(--gradient-main); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">J</div>
+                        <div class="ms-3">
+                            <h6 class="text-white mb-0">JohnDoe_99</h6>
+                            <small class="text-muted">2 hours ago</small>
+                        </div>
+                    </div>
+                    <p class="text-white">Just finished Elden Ring for the 3rd time. Malenia is still the toughest boss fight I've ever encountered. Any tips for a magic build?</p>
+                    <div class="mt-3 d-flex gap-3">
+                        <button class="btn btn-sm btn-outline-light rounded-0"><i class="far fa-heart me-2"></i> 24</button>
+                        <button class="btn btn-sm btn-outline-light rounded-0"><i class="far fa-comment me-2"></i> 8 Comments</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3 rounded-0" style="background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1);">
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <div style="width: 40px; height: 40px; background: var(--secondary); color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">S</div>
+                        <div class="ms-3">
+                            <h6 class="text-white mb-0">SarahGamer</h6>
+                            <small class="text-muted">5 hours ago</small>
+                        </div>
+                    </div>
+                    <p class="text-white">Can't believe the graphics in Cyberpunk 2077 with the new update. Night City looks absolutely stunning!</p>
+                    <div class="mt-3">
+                        <img src="https://via.placeholder.com/600x300/121212/333?text=Cyberpunk+Screenshot" class="img-fluid border border-secondary" alt="Screenshot">
+                    </div>
+                    <div class="mt-3 d-flex gap-3">
+                        <button class="btn btn-sm btn-outline-light rounded-0"><i class="far fa-heart me-2"></i> 156</button>
+                        <button class="btn btn-sm btn-outline-light rounded-0"><i class="far fa-comment me-2"></i> 42 Comments</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="p-4 mb-4" style="background: var(--bg-panel); border-top: 4px solid var(--secondary);">
+                <h5 class="text-white brand-font mb-3">TRENDING TOPICS</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-white d-block p-2 bg-dark hover-glow">#EldenRingDLC</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-white d-block p-2 bg-dark hover-glow">#StarfieldTips</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-white d-block p-2 bg-dark hover-glow">#IndieDev</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-white d-block p-2 bg-dark hover-glow">#Speedrun</a></li>
+                </ul>
+            </div>
+
+            <div class="p-4" style="background: var(--bg-panel);">
+                <h5 class="text-white brand-font mb-3">TOP CONTRIBUTORS</h5>
+                <div class="d-flex align-items-center mb-3">
+                    <div style="width: 35px; height: 35px; background: #444; border-radius: 50%; margin-right: 10px;"></div>
+                    <span class="text-white">xX_Slayer_Xx</span>
+                    <span class="ms-auto text-secondary small fw-bold">LVL 50</span>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <div style="width: 35px; height: 35px; background: #444; border-radius: 50%; margin-right: 10px;"></div>
+                    <span class="text-white">PixelQueen</span>
+                    <span class="ms-auto text-secondary small fw-bold">LVL 48</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

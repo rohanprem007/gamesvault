@@ -9,3 +9,9 @@ def home(request):
         'games': all_games,
     }
     return render(request, 'store/home.html', context)
+
+def community(request):
+    return render(request, 'community.html')
+
+def support_hub(request):
+    return render(request, 'support.html')
