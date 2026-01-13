@@ -5,19 +5,17 @@ from django.db.models import Q
 from .models import Game, Library, Wishlist
 
 def home(request):
-    # Only pick the top 10 Featured games for the carousel and "Trending" section
+    # Only fetch Top 10 Featured games for Home Page
     featured_games = Game.objects.filter(is_featured=True)[:10]
     
-    # We pass 'featured_games' twice because your home template uses it for both 
-    # the carousel AND the grid. If you want the grid to show different games,
-    # you can adjust this query.
     context = {
         'featured_games': featured_games,
-        'games': featured_games, # For now, the home page grid also shows these trending ones
+        'games': featured_games, # For the grid on home page, usually just show trending too
     }
     return render(request, 'store/home.html', context)
 
 def browse_games(request):
+    # Fetch ALL games for the browse page
     query = request.GET.get('q')
     genre_filter = request.GET.get('genre')
     
