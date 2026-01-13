@@ -3,7 +3,9 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm
+from store.models import Library, Wishlist
 
+# ... existing register/logout views ...
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -22,8 +24,22 @@ def logout_view(request):
 
 @login_required
 def profile(request):
-    return render(request, 'users/profile.html')
+    # Pass basic stats to dashboard
+    library_count = Library.objects.filter(user=request.user).count()
+    wishlist_count = Wishlist.objects.filter(user=request.user).count()
+    return render(request, 'users/profile.html', {
+        'library_count': library_count,
+        'wishlist_count': wishlist_count
+    })
 
 @login_required
 def library(request):
-    return render(request, 'users/library.html')
+    # Fetch actual games owned by user
+    library_items = Library.objects.filter(user=request.user).select_related('game')
+    return render(request, 'users/library.html', {'library_items': library_items})
+
+@login_required
+def wishlist(request):
+    # Fetch wishlist items
+    wishlist_items = Wishlist.objects.filter(user=request.user).select_related('game')
+    return render(request, 'users/wishlist.html', {'wishlist_items': wishlist_items})

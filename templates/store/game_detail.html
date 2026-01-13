@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .detail-hero {
+        position: relative;
+        height: 60vh;
+        overflow: hidden;
+    }
+    .detail-bg {
+        position: absolute; width: 100%; height: 100%;
+        background-size: cover; background-position: center;
+        filter: blur(20px) brightness(0.3); z-index: 0;
+    }
+    .detail-content {
+        position: relative; z-index: 2; height: 100%;
+        display: flex; align-items: center;
+    }
+    .game-cover {
+        border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        border: 1px solid rgba(255,255,255,0.1);
+        transform: rotateY(-10deg) rotateX(5deg);
+        transition: 0.5s;
+    }
+    .game-cover:hover { transform: rotateY(0) rotateX(0); }
+    
+    .price-box {
+        background: var(--bg-panel); padding: 20px;
+        border: 1px solid var(--secondary);
+        display: inline-block; min-width: 250px;
+    }
+</style>
+
+<div class="detail-hero">
+    <div class="detail-bg" style="background-image: url('{{ game.image.url }}');"></div>
+    <div class="container detail-content">
+        <div class="row align-items-center w-100">
+            <div class="col-md-4 text-center">
+                <img src="{{ game.image.url }}" alt="{{ game.title }}" class="img-fluid game-cover" style="max-height: 400px;">
+            </div>
+            <div class="col-md-8">
+                <span class="badge bg-secondary mb-2">{{ game.genre|upper }}</span>
+                <h1 class="display-3 fw-bold text-white brand-font mb-3">{{ game.title }}</h1>
+                <p class="lead text-white-50 mb-4">{{ game.description }}</p>
+                
+                <div class="d-flex gap-3 align-items-center">
+                    <div class="price-box text-center">
+                        {% if game.discount_price %}
+                            <div class="text-decoration-line-through text-muted small">${{ game.price }}</div>
+                            <div class="h2 text-secondary fw-bold mb-0">${{ game.discount_price }}</div>
+                        {% else %}
+                            <div class="h2 text-white fw-bold mb-0">${{ game.price }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if in_library %}
+                        <button class="btn btn-success btn-lg rounded-0 disabled px-5">OWNED</button>
+                    {% else %}
+                        <a href="{% url 'buy_game' game.id %}" class="btn btn-theme btn-lg px-5">BUY NOW</a>
+                    {% endif %}
+                    
+                    {% if in_wishlist %}
+                        <a href="{% url 'remove_from_wishlist' game.id %}" class="btn btn-outline-danger btn-lg rounded-0" title="Remove from Wishlist"><i class="fas fa-heart"></i></a>
+                    {% else %}
+                        <a href="{% url 'add_to_wishlist' game.id %}" class="btn btn-outline-light btn-lg rounded-0" title="Add to Wishlist"><i class="far fa-heart"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h3 class="text-white brand-font border-bottom border-secondary pb-2 mb-4">SYSTEM REQUIREMENTS</h3>
+            <div class="p-4" style="background: var(--bg-panel);">
+                <div class="row text-white-50">
+                    <div class="col-6">
+                        <h6 class="text-white">MINIMUM:</h6>
+                        <ul class="list-unstyled small">
+                            <li>OS: Windows 10 64-bit</li>
+                            <li>Processor: Intel Core i5-8400</li>
+                            <li>Memory: 16 GB RAM</li>
+                            <li>Graphics: NVIDIA GeForce GTX 1060 6GB</li>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <h6 class="text-white">RECOMMENDED:</h6>
+                        <ul class="list-unstyled small">
+                            <li>OS: Windows 11 64-bit</li>
+                            <li>Processor: Intel Core i9-12900k</li>
+                            <li>Memory: 32 GB RAM</li>
+                            <li>Graphics: NVIDIA GeForce RTX 3080</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h3 class="text-white brand-font border-bottom border-secondary pb-2 mb-4">DETAILS</h3>
+            <ul class="list-group rounded-0">
+                <li class="list-group-item bg-transparent text-white border-secondary">
+                    <span class="text-muted">Release Date:</span> <span class="float-end">{{ game.release_date }}</span>
+                </li>
+                <li class="list-group-item bg-transparent text-white border-secondary">
+                    <span class="text-muted">Developer:</span> <span class="float-end">GameVault Studios</span>
+                </li>
+                <li class="list-group-item bg-transparent text-white border-secondary">
+                    <span class="text-muted">Publisher:</span> <span class="float-end">GameVault Inc.</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

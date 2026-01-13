@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+<!-- ... existing styles ... -->
 <style>
+    /* ... (Same styles as before) ... */
     /* Hero Banner Container */
     .hero-wrapper {
         position: relative;
@@ -108,7 +109,8 @@
     <div class="carousel-inner">
         {% for game in featured_games %}
         <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="5000">
-            <a href="https://www.google.com/search?q={{ game.title|urlencode }}+video+game" target="_blank" class="text-decoration-none">
+            <!-- UPDATED LINK: Points to internal detail view -->
+            <a href="{% url 'game_detail' game.id %}" class="text-decoration-none">
                 <div class="hero-wrapper">
                     <div class="hero-bg" style="background-image: url('{% if game.image %}{{ game.image.url }}{% else %}https://via.placeholder.com/1920x1080/1a0b2e/ff0055?text=Background{% endif %}');"></div>
                     <div class="hero-fg-container">
@@ -176,7 +178,8 @@
     <div class="row g-4">
         {% for game in games %}
         <div class="col-6 col-md-3">
-            <a href="https://www.google.com/search?q={{ game.title|urlencode }}+video+game" target="_blank" class="text-decoration-none d-block h-100">
+            <!-- UPDATED LINK: Points to internal detail view -->
+            <a href="{% url 'game_detail' game.id %}" class="text-decoration-none d-block h-100">
                 <div class="game-card">
                     <div class="card-img-container">
                         <img src="{% if game.image %}{{ game.image.url }}{% else %}https://via.placeholder.com/400x600/2d1245/ff0055?text=Game{% endif %}" alt="{{ game.title }}">
