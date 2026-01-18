@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Game, Library, Wishlist, Cart, CartItem
+from .models import Game, Library, Wishlist, Cart, CartItem, Review
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
@@ -23,3 +23,10 @@ class CartItemInline(admin.TabularInline):
 class CartAdmin(admin.ModelAdmin):
     list_display = ('user', 'created_at', 'total_price')
     inlines = [CartItemInline]
+
+# --- NEW FEATURE: Review Admin ---
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('game', 'user', 'rating', 'created_at')
+    list_filter = ('rating', 'created_at')
+    search_fields = ('game__title', 'user__username', 'comment')

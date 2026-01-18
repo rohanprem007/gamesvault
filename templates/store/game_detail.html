@@ -8,8 +8,17 @@
     .game-cover { border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); transform: rotateY(-10deg) rotateX(5deg); transition: 0.5s; }
     .game-cover:hover { transform: rotateY(0) rotateX(0); }
     .price-box { background: var(--bg-panel); padding: 20px; border: 1px solid var(--secondary); display: inline-block; min-width: 250px; }
+    
+    /* Review Section Styles to match theme */
+    .review-card { background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1); }
+    .form-control { background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; }
+    .form-control:focus { background-color: rgba(255,255,255,0.1); color: white; box-shadow: none; border-color: var(--secondary); }
+    .form-select { background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; }
+    /* Fix for option text color in dark mode */
+    .form-select option { background-color: #1a1a1a; color: white; }
 </style>
 
+<!-- ORIGINAL HERO SECTION RESTORED -->
 <div class="detail-hero">
     <div class="detail-bg" style="background-image: url('{{ game.image.url }}');"></div>
     <div class="container detail-content">
@@ -56,9 +65,10 @@
 
 <div class="container py-5">
     <div class="row">
+        <!-- SYSTEM REQUIREMENTS -->
         <div class="col-md-8">
             <h3 class="text-white brand-font border-bottom border-secondary pb-2 mb-4">SYSTEM REQUIREMENTS</h3>
-            <div class="p-4" style="background: var(--bg-panel);">
+            <div class="p-4 mb-5" style="background: var(--bg-panel);">
                 <div class="row text-white-50">
                     <div class="col-6">
                         <h6 class="text-white">MINIMUM:</h6>
@@ -80,7 +90,59 @@
                     </div>
                 </div>
             </div>
+
+            <!-- NEW REVIEW SECTION INTEGRATED HERE -->
+            <h3 class="text-white brand-font border-bottom border-secondary pb-2 mb-4">REVIEWS & RATINGS</h3>
+            
+            {% if user.is_authenticated %}
+                <div class="card mb-4 review-card">
+                    <div class="card-header border-secondary text-white fw-bold bg-transparent">Write a Review</div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <!-- Manually rendering form fields to avoid crispy_forms dependency -->
+                            {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label text-white">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="form-text text-white-50 small">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                            <button type="submit" class="btn btn-theme mt-3">Post Review</button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-dark border-secondary text-white mt-3">
+                    Please <a href="{% url 'login' %}" class="text-warning fw-bold">login</a> to leave a review.
+                </div>
+            {% endif %}
+
+            <div class="mt-4">
+                {% for review in reviews %}
+                    <div class="card mb-3 review-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title text-white brand-font mb-0">{{ review.user.username }}</h5>
+                                <span class="badge bg-warning text-dark">★ {{ review.rating }}/5</span>
+                            </div>
+                            <h6 class="card-subtitle mt-2 mb-3 text-white-50 small">{{ review.created_at|date:"F d, Y" }}</h6>
+                            <p class="card-text text-white">{{ review.comment }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-white-50 fst-italic">No reviews yet. Be the first to share your thoughts!</p>
+                {% endfor %}
+            </div>
+
         </div>
+
+        <!-- SIDEBAR DETAILS -->
         <div class="col-md-4">
             <h3 class="text-white brand-font border-bottom border-secondary pb-2 mb-4">DETAILS</h3>
             <ul class="list-group rounded-0">

@@ -80,3 +80,14 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.game.title} in cart"
+
+# --- NEW FEATURE: Reviews ---
+class Review(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], help_text="Rate from 1 to 5")
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.game.title} ({self.rating}/5)"
