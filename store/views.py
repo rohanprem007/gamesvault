@@ -152,6 +152,14 @@ def buy_game(request, game_id):
         Wishlist.objects.filter(user=request.user, game=game).delete()
     return redirect('library')
 
+# --- NEW VIEW: Remove from Library ---
+@login_required
+def remove_from_library(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    Library.objects.filter(user=request.user, game=game).delete()
+    messages.info(request, f"{game.title} removed from your library.")
+    return redirect('library')
+
 def community(request):
     return render(request, 'community.html')
 
@@ -160,7 +168,15 @@ def support_hub(request):
 
 @login_required
 def library(request):
+    # Updated to pass Library objects instead of just Game objects
+    # This matches the user's template expectation (item.purchase_date, item.game.title)
     library_items = Library.objects.filter(user=request.user).select_related('game')
-    games = [item.game for item in library_items]
-    context = {'games': games}
+    context = {'library_items': library_items}
     return render(request, 'users/library.html', context)
+
+@login_required
+def wishlist(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user).select_related('game')
+    games = [item.game for item in wishlist_items]
+    context = {'games': games}
+    return render(request, 'users/wishlist.html', context)

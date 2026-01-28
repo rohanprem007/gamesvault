@@ -17,6 +17,11 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('game/<int:game_id>/buy/', views.buy_game, name='buy_game'),
     
+    # Library Management (New)
+    path('remove-from-library/<int:game_id>/', views.remove_from_library, name='remove_from_library'),
+    path('library/', views.library, name='library'),
+    path('wishlist/', views.wishlist, name='wishlist'),
+
     # Misc
     path('community/', views.community, name='community'),
     path('support-hub/', views.support_hub, name='support_hub'),
